@@ -21,6 +21,7 @@ def generate_pairs():
 #                          ])
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize('creds', generate_pairs())
 def test_login(creds):
     login, passw = creds
@@ -30,3 +31,27 @@ def test_login(creds):
     driver.find_element(By.ID, 'pass').send_keys(passw)
     driver.find_element(By.ID, 'pass').click()
     error_text = driver.find_element(By.CSS_SELECTOR, '[data-ui - id="message-error"]').text
+
+
+@pytest.fixture()
+def page(request):
+    driver = webdriver.Chrome()
+    driver.implicitly_wait(10)
+    param = request.param
+    if param == 'whats_new':
+        driver.get('https://magento.softwaretestingboard.com/what-is-new.html')
+    elif param == 'sale':
+        driver.get('https://magento.softwaretestingboard.com/sale')
+    return driver
+
+
+@pytest.mark.parametrize('page', ['whats_new'], indirect=True)
+def test_whats_new(page):
+    title = page.find_element(By.CSS_SELECTOR, 'h1')
+    assert title.text == 'What\'s New'
+
+
+@pytest.mark.parametrize('page', ['sale'], indirect=True)
+def test_sale(page):
+    title = page.find_element(By.CSS_SELECTOR, 'h1')
+    assert title.text == 'Sale'

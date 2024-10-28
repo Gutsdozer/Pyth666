@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from  pages.homepage import HomePage
 from pages.product import ProductPage
+from selenium.webdriver.firefox.options import Options
 
 
 def test_open_s6(browser):
